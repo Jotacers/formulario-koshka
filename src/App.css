@@ -1,0 +1,136 @@
+body {
+  background: #181818;
+  color: #fff;
+  font-family: 'Roboto', Arial, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 700px;
+  margin: 40px auto;
+  background: #23272f;
+  border-radius: 12px;
+  box-shadow: 0 4px 32px #000a;
+  padding: 32px 24px 24px 24px;
+}
+
+.titulo {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #fff;
+  text-align: center;
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.input-nome {
+  padding: 12px;
+  border-radius: 6px;
+  border: none;
+  font-size: 1.1rem;
+  background: #181c24;
+  color: #fff;
+  margin-bottom: 8px;
+  outline: none;
+  box-shadow: 0 1px 2px #0003;
+}
+
+.pergunta {
+  margin-bottom: 12px;
+  background: #23272f;
+  border-radius: 8px;
+  padding: 16px 12px;
+  box-shadow: 0 1px 4px #0002;
+}
+
+.texto-pergunta {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.opcoes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.opcao {
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.opcao input[type="radio"] {
+  accent-color: #4285f4;
+  width: 18px;
+  height: 18px;
+}
+
+.botao-enviar {
+  background: #4285f4;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 12px;
+  transition: background 0.2s;
+}
+
+.botao-enviar:hover {
+  background: #3367d6;
+}
+
+.enviado {
+  text-align: center;
+  margin: 32px 0;
+}
+
+.respostas-area {
+  margin-top: 40px;
+  background: #181c24;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 1px 8px #0002;
+}
+
+.titulo-respostas {
+  font-size: 1.3rem;
+  margin-bottom: 16px;
+  color: #fff;
+}
+
+.tabela-respostas {
+  width: 100%;
+  border-collapse: collapse;
+  background: #23272f;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.tabela-respostas th, .tabela-respostas td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #333a;
+  text-align: center;
+}
+
+.tabela-respostas th {
+  background: #181c24;
+  color: #8ab4f8;
+  font-weight: 600;
+}
+
+.tabela-respostas tr:last-child td {
+  border-bottom: none;
+} 
