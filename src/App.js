@@ -47,7 +47,7 @@ function App() {
 
   function buscarRespostas() {
     setCarregando(true);
-    fetch("http://localhost:3001/api/respostas")
+    fetch("https://form-koshka.onrender.com/api/respostas")
       .then((res) => res.json())
       .then((data) => {
         setTodasRespostas(data);
@@ -69,7 +69,7 @@ function App() {
       alert("Preencha seu nome e todas as perguntas!");
       return;
     }
-    fetch("http://localhost:3001/api/responder", {
+    fetch("https://form-koshka.onrender.com/api/responder", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ nome, respostas }),
