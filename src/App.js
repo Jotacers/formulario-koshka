@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import jwt_decode from 'jwt-decode';
 
 const PERGUNTAS = [
   {
@@ -17,7 +19,7 @@ const PERGUNTAS = [
   },
   {
     pergunta: "Qual estado eu moro atualmente?",
-    opcoes: ["RJ", "SP", "Toronto(Canada)"]
+    opcoes: ["RJ", "SP", "Toronto(Canada)", "Goias"]
   },
   {
     pergunta: "O que eu faria se eu visse alguem chorando ou precisando de ajuda:",
@@ -34,12 +36,15 @@ const PERGUNTAS = [
   },
 ];
 
+const CLIENT_ID = 613477921704-n4237ht34hab10g6c1acirs3269flvf8.apps.googleusercontent.com"; // Substitua pelo seu Client ID do Google
+
 function App() {
   const [nome, setNome] = useState("");
   const [respostas, setRespostas] = useState(Array(PERGUNTAS.length).fill(""));
   const [enviado, setEnviado] = useState(false);
   const [todasRespostas, setTodasRespostas] = useState([]);
   const [carregando, setCarregando] = useState(false);
+  const [usuarioGoogle, setUsuarioGoogle] = useState(null);
 
   useEffect(() => {
     buscarRespostas();
@@ -63,6 +68,11 @@ function App() {
     });
   }
 
+  function handleGoogleLoginSuccess(credentialResponse) {
+    const decoded = jwt_decode(credentialResponse.credential);
+    setUsuarioGoogle(decoded);
+  }
+
   function handleSubmit(e) {
     e.preventDefault();
     if (!nome.trim() || respostas.some((r) => !r)) {
@@ -72,7 +82,12 @@ function App() {
     fetch("https://form-koshka.onrender.com/api/responder", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nome, respostas }),
+      body: JSON.stringify({ 
+        nome, 
+        respostas, 
+        email: usuarioGoogle.email, 
+        nomeGoogle: usuarioGoogle.name 
+      }),
     })
       .then((res) => res.json())
       .then(() => {
@@ -82,49 +97,61 @@ function App() {
   }
 
   return (
-    <div className="container">
-      <h1 className="titulo">Você realmente me conhece?</h1>
-      {!enviado ? (
-        <form className="formulario" onSubmit={handleSubmit}>
-          <input
-            className="input-nome"
-            type="text"
-            placeholder="Seu nome"
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-            required
-          />
-          {PERGUNTAS.map((q, idx) => (
-            <div className="pergunta" key={idx}>
-              <div className="texto-pergunta">{q.pergunta}</div>
-              <div className="opcoes">
-                {q.opcoes.map((op, i) => (
-                  <label key={i} className="opcao">
-                    <input
-                      type="radio"
-                      name={`pergunta-${idx}`}
-                      value={op}
-                      checked={respostas[idx] === op}
-                      onChange={() => handleChangeResposta(idx, op)}
-                      required
-                    />
-                    {String.fromCharCode(65 + i)}: {op}
-                  </label>
-                ))}
-              </div>
+    <GoogleOAuthProvider clientId={CLIENT_ID}>
+      <div className="container">
+        <h1 className="titulo">Você realmente me conhece?</h1>
+        {!usuarioGoogle ? (
+          <div style={{ display: 'flex', justifyContent: 'center', margin: '32px 0' }}>
+            <GoogleLogin
+              onSuccess={handleGoogleLoginSuccess}
+              onError={() => alert('Erro ao fazer login com Google')}
+              width="100%"
+            />
+          </div>
+        ) : (
+          !enviado ? (
+            <form className="formulario" onSubmit={handleSubmit}>
+              <input
+                className="input-nome"
+                type="text"
+                placeholder="Seu nome"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+                required
+              />
+              {PERGUNTAS.map((q, idx) => (
+                <div className="pergunta" key={idx}>
+                  <div className="texto-pergunta">{q.pergunta}</div>
+                  <div className="opcoes">
+                    {q.opcoes.map((op, i) => (
+                      <label key={i} className="opcao">
+                        <input
+                          type="radio"
+                          name={`pergunta-${idx}`}
+                          value={op}
+                          checked={respostas[idx] === op}
+                          onChange={() => handleChangeResposta(idx, op)}
+                          required
+                        />
+                        {String.fromCharCode(65 + i)}: {op}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              ))}
+              <button className="botao-enviar" type="submit">Enviar</button>
+            </form>
+          ) : (
+            <div className="enviado">
+              <p>Respostas enviadas! Obrigado por participar.</p>
+              <button className="botao-enviar" onClick={() => setEnviado(false)}>
+                Responder novamente
+              </button>
             </div>
-          ))}
-          <button className="botao-enviar" type="submit">Enviar</button>
-        </form>
-      ) : (
-        <div className="enviado">
-          <p>Respostas enviadas! Obrigado por participar.</p>
-          <button className="botao-enviar" onClick={() => setEnviado(false)}>
-            Responder novamente
-          </button>
-        </div>
-      )}
-    </div>
+          )
+        )}
+      </div>
+    </GoogleOAuthProvider>
   );
 }
 
