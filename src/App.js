@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
-import jwt_decode from 'jwt-decode';
+import { jwtDecode } from "jwt-decode";
 
 const PERGUNTAS = [
   {
@@ -69,7 +69,7 @@ function App() {
   }
 
   function handleGoogleLoginSuccess(credentialResponse) {
-    const decoded = jwt_decode(credentialResponse.credential);
+    const decoded = jwtDecode(credentialResponse.credential);
     setUsuarioGoogle(decoded);
   }
 
