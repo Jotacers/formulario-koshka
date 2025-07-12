@@ -36,7 +36,7 @@ const PERGUNTAS = [
   },
 ];
 
-const CLIENT_ID = 613477921704-n4237ht34hab10g6c1acirs3269flvf8.apps.googleusercontent.com"; // Substitua pelo seu Client ID do Google
+const CLIENT_ID = "613477921704-n4237ht34hab10g6c1acirs3269flvf8.apps.googleusercontent.com"; // Substitua pelo seu Client ID do Google
 
 function App() {
   const [nome, setNome] = useState("");
